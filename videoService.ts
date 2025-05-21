@@ -5,15 +5,7 @@ import fs from "fs/promises";
 const prisma = new PrismaClient();
 
 
-type UpdateVideoTemplateInput = {
-  nome?: string;
-  descricao?: string;
-  duracaoSegundos?: number;
-  formato?: string;
-  estruturaJson?: any;
-  previewUrl?: string;
-  assetIds?: number[];
-};
+
 
 
 const UPLOAD_DIR = path.join(__dirname, "..", "..", "uploads", "media_assets");
@@ -123,8 +115,6 @@ class VideoService {
   }
 
 
-
-
   
   async atualizarVideoTemplate(
   id: number,
@@ -139,6 +129,7 @@ class VideoService {
   }
 ): Promise<VideoTemplate | null> {
   const { assetIds, ...restData } = data;
+
 
   return prisma.videoTemplate.update({
     where: { id },
