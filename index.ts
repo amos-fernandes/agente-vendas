@@ -9,7 +9,7 @@ import videoRoutes from './videoRoutes'; // Importar as rotas de vídeo
 dotenv.config();
 
 const app: Express = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 const prisma = new PrismaClient();
 
 app.use(express.json());
