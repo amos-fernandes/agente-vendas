@@ -4,10 +4,6 @@ import fs from "fs/promises";
 
 const prisma = new PrismaClient();
 
-
-
-
-
 const UPLOAD_DIR = path.join(__dirname, "..", "..", "uploads", "media_assets");
 const GENERATED_VIDEOS_DIR = path.join(__dirname, "..", "..", "generated_videos");
 
@@ -72,7 +68,7 @@ class VideoService {
         // await fs.unlink(filePath);
         console.log(`Simulando deleção do arquivo: ${filePath}`);
       } catch (err) {
-        console.warn(`Erro ao simular deleção do arquivo ${filePath}:`, err);
+        console.warn(`Erro ao simular deleção do arquivo ${filePath}:", err);
       }
     }
 
@@ -114,33 +110,29 @@ class VideoService {
     });
   }
 
-
-  
   async atualizarVideoTemplate(
-  id: number,
-  data: {
-    nome?: string;
-    descricao?: string;
-    duracaoSegundos?: number;
-    formato?: string;
-    estruturaJson?: any;
-    previewUrl?: string;
-    assetIds?: number[];
-  }
-): Promise<VideoTemplate | null> {
-  const { assetIds, ...restData } = data;
-
-
-  return prisma.videoTemplate.update({
-    where: { id },
+    id: number,
     data: {
-      ...restData,
-      assets: assetIds ? { set: assetIds.map((id) => ({ id })) } : undefined,
-    },
-    include: { assets: true }, // incluir para manter retorno consistente
-  });
-}
-
+      nome?: string;
+      descricao?: string;
+      duracaoSegundos?: number;
+      formato?: string;
+      estruturaJson?: any;
+      previewUrl?: string;
+      assetIds?: number[];
+    }
+  ): Promise<VideoTemplate | null> {
+    const { assetIds, ...restData } = data;
+    // Não incluir o campo id em restData!
+    return prisma.videoTemplate.update({
+      where: { id },
+      data: {
+        ...restData,
+        assets: assetIds ? { set: assetIds.map((id) => ({ id })) } : undefined,
+      },
+      include: { assets: true },
+    });
+  }
 
   async deletarVideoTemplate(id: number): Promise<void> {
     await prisma.videoGerado.deleteMany({ where: { videoTemplateId: id } });
@@ -233,7 +225,7 @@ class VideoService {
         // await fs.unlink(filePath);
         console.log(`Simulando deleção do vídeo: ${filePath}`);
       } catch (err) {
-        console.warn(`Erro ao deletar vídeo simulado ${filePath}:`, err);
+        console.warn(`Erro ao deletar vídeo simulado ${filePath}:", err);
       }
     }
 
